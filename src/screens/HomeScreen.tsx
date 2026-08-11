@@ -81,7 +81,7 @@ export function HomeScreen({ onEnter }: HomeScreenProps) {
           display: "flex",
           alignItems: "stretch",
           overflow: "hidden",
-          maxWidth: qrOpen ? 230 : 40,
+          maxWidth: qrOpen ? 135 : 40,
           transition: "max-width 320ms ease-out",
           background: HEADER_GRADIENT,
           borderRadius: "12px 0 0 12px",
@@ -111,19 +111,19 @@ export function HomeScreen({ onEnter }: HomeScreenProps) {
         </button>
         <div
           style={{
-            width: 190,
+            width: 95,
             flexShrink: 0,
-            padding: "0.8rem 1rem 0.8rem 0.3rem",
+            padding: "0.4rem 0.5rem 0.4rem 0.15rem",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: "0.5rem",
+            gap: "0.25rem",
           }}
         >
           <img
             src="./qrcode.png"
             alt="QR code de partage"
-            style={{ width: "100%", borderRadius: 8, background: "#141414", padding: 10, display: "block" }}
+            style={{ width: "100%", borderRadius: 4, background: "#141414", padding: 5, display: "block" }}
           />
         </div>
       </div>

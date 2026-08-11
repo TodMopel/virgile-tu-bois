@@ -11,17 +11,15 @@ import type { VisualProps } from "../types";
 // balancement qui accélère et s'amplifie avec l'énergie, pas juste un pulse), plusieurs
 // couleurs comme une vraie rampe de projecteurs. Deuxième passe 2026-08-10.
 
-// plus de faisceaux, vitesses variées (certains nettement plus lents que d'autres) —
-// retour du 2026-08-10.
+// moins de faisceaux (retour du 2026-08-11 : ça ramait sur mobile — chaque faisceau
+// porte un filtre blur(20px) sur un élément de 170vh, coûteux à multiplier), vitesses
+// toujours variées.
 const BEAMS: { x: string; baseAngle: number; color: string; width: number; speedScale: number }[] = [
-  { x: "6%", baseAngle: -9, color: "255,225,180", width: 60, speedScale: 0.55 },
-  { x: "18%", baseAngle: -5, color: "255,140,180", width: 50, speedScale: 1.1 },
-  { x: "30%", baseAngle: -2, color: "140,220,255", width: 55, speedScale: 0.7 },
-  { x: "42%", baseAngle: -1, color: "180,140,255", width: 45, speedScale: 1.3 },
-  { x: "54%", baseAngle: 2, color: "255,225,180", width: 50, speedScale: 0.6 },
-  { x: "66%", baseAngle: 3, color: "140,220,255", width: 55, speedScale: 1 },
-  { x: "78%", baseAngle: 5, color: "180,140,255", width: 60, speedScale: 0.5 },
-  { x: "90%", baseAngle: 8, color: "255,140,180", width: 65, speedScale: 1.2 },
+  { x: "10%", baseAngle: -8, color: "255,225,180", width: 60, speedScale: 0.55 },
+  { x: "30%", baseAngle: -2, color: "140,220,255", width: 55, speedScale: 0.9 },
+  { x: "50%", baseAngle: 0, color: "180,140,255", width: 50, speedScale: 1.2 },
+  { x: "70%", baseAngle: 3, color: "255,140,180", width: 55, speedScale: 0.7 },
+  { x: "90%", baseAngle: 8, color: "140,220,255", width: 60, speedScale: 1.1 },
 ];
 
 // 7 lignes blanches qui dansent (balancement + rotation, calées sur les basses) —

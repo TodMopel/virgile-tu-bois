@@ -13,16 +13,14 @@ import type { VisualProps } from "../types";
 
 // vitesses ralenties (retour 2026-08-10 : "trop bien, juste ralentir pour faire plus
 // lampe à lave" — une vraie lampe à lave est hypnotique et lente).
+// nombre réduit de bulles (retour du 2026-08-11 : ça ramait sur mobile — le filtre
+// "goo" est coûteux par bulle en plus).
 const BLOBS = [
   { size: 220, baseX: 28, baseY: 32, speed: 0.26, phase: 0, color: "#ff8a3d" },
   { size: 260, baseX: 66, baseY: 58, speed: 0.2, phase: 2.1, color: "#ff2f7a" },
   { size: 190, baseX: 46, baseY: 74, speed: 0.3, phase: 4.2, color: "#a855f7" },
   { size: 170, baseX: 72, baseY: 22, speed: 0.24, phase: 1.3, color: "#ffd23d" },
-  // petites bulles d'appoint — retour du 2026-08-11
   { size: 70, baseX: 18, baseY: 60, speed: 0.34, phase: 3.4, color: "#ff8a3d" },
-  { size: 55, baseX: 58, baseY: 36, speed: 0.4, phase: 5.6, color: "#ffd23d" },
-  { size: 65, baseX: 82, baseY: 66, speed: 0.3, phase: 0.7, color: "#ff2f7a" },
-  { size: 50, baseX: 38, baseY: 18, speed: 0.36, phase: 2.8, color: "#a855f7" },
 ];
 
 function LavaBlob({

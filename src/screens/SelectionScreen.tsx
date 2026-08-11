@@ -27,12 +27,12 @@ export function SelectionScreen({ onOpenPlayer }: SelectionScreenProps) {
         </div>
       <div
         style={{
-          height: "3.2rem",
+          height: "6.4rem",
         }}
       >
       </div>
       </div>
-      <HiddenReveal scrollRef={scrollRef} src="./extras/hidden-tracklist.png" liftOffset={50} />
+      <HiddenReveal scrollRef={scrollRef} src="./extras/hidden-tracklist.png" liftOffset={100} />
     </KraftBackground>
   );
 }

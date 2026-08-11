@@ -57,6 +57,7 @@ export function TitleText({
         letterSpacing: "0.02em",
         lineHeight: 1.05,
         padding: "0 1rem",
+        whiteSpace: "nowrap",
         ...style,
       }}
     >
