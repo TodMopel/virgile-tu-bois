@@ -41,6 +41,18 @@ cd android && ./gradlew assembleDebug
 
 L'APK généré (`android/app/build/outputs/apk/debug/app-debug.apk`) est à copier sur la clé.
 
+### Fallback PWA (GitHub Pages)
+
+En complément de la clé, une version hébergée existe pour contourner les restrictions `file://` de Safari iOS (voir `../CONTEXT.md`, section "Fallback PWA") :
+
+```
+npm run build:pwa   # PAS npm run build — config séparée (vite.config.pwa.ts), sans singlefile
+```
+
+Déploiement automatique via GitHub Actions à chaque push sur `main` — pas besoin de lancer ce build manuellement pour publier. URL live : https://todmopel.github.io/virgile-tu-bois/
+
+Côté utilisateur : ouvrir le lien dans Safari, puis Partager → "Sur l'écran d'accueil". Fonctionne hors-ligne ensuite (service worker qui précache tout, audio compris).
+
 ## Ce qui manque encore
 
 - **Effets sonores d'interface** (`public/sfx/nav-click.mp3`, `select.mp3`, `transition.mp3`) : pas de fichiers pour l'instant, l'app fonctionne sans (silencieux) — voir `useSfx.ts`, échoue silencieusement si absent
