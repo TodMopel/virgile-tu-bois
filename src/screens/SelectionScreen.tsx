@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { tracks } from "../data/tracks";
 import { KraftBackground, TornBanner } from "../ui/paper";
 import { TrackRow } from "./TrackRow";
+import { HiddenReveal } from "./HiddenReveal";
 import { usePlaybackContext } from "../audio/PlaybackContext";
 
 interface SelectionScreenProps {
@@ -24,7 +25,14 @@ export function SelectionScreen({ onOpenPlayer }: SelectionScreenProps) {
             <TrackRow key={track.id} track={track} index={i} onOpen={onOpenPlayer} />
           ))}
         </div>
+      <div
+        style={{
+          height: "3.2rem",
+        }}
+      >
       </div>
+      </div>
+      <HiddenReveal scrollRef={scrollRef} src="./extras/hidden-tracklist.png" liftOffset={50} />
     </KraftBackground>
   );
 }

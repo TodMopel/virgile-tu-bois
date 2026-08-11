@@ -1,14 +1,20 @@
+import { useState } from "react";
 import { useSfx } from "../audio/useSfx";
 import { usePlaybackContext } from "../audio/PlaybackContext";
 import { useImperativeAnimation } from "../visuals/shared/useImperativeAnimation";
+import { paperPalette } from "../ui/paper";
+import { ShareIcon } from "../ui/icons";
 
 interface HomeScreenProps {
   onEnter: () => void;
 }
 
+const HEADER_GRADIENT = `linear-gradient(150deg, ${paperPalette.pink}, ${paperPalette.pinkDark} 85%)`;
+
 export function HomeScreen({ onEnter }: HomeScreenProps) {
   const { play } = useSfx();
   const { playing, energyRef } = usePlaybackContext();
+  const [qrOpen, setQrOpen] = useState(false);
 
   // si un morceau joue déjà (lecture persistante), la pochette danse au son au lieu
   // de flotter en boucle CSS — retour du 2026-08-11.
@@ -57,6 +63,71 @@ export function HomeScreen({ onEnter }: HomeScreenProps) {
           cursor: "pointer",
         }}
       />
+      {/* onglet "tiroir" QR code, ferré au bord droit (centré verticalement) — toujours
+          visible, même fond que les bannières de titre (TornBanner) — retour du
+          2026-08-11. Le bouton fait partie du même bloc que le panneau : à l'ouverture,
+          le panneau ne s'affiche pas juste à côté, il pousse vraiment le bouton vers la
+          gauche (bouton = premier enfant d'un conteneur qui s'élargit en restant ferré
+          à droite). Le QR est blanc sur transparent, il lui faut un fond sombre. */}
+      {qrOpen && (
+        <div onClick={() => setQrOpen(false)} style={{ position: "absolute", inset: 0, zIndex: 25 }} />
+      )}
+      <div
+        style={{
+          position: "absolute",
+          top: 20,
+          right: 0,
+          zIndex: 29,
+          display: "flex",
+          alignItems: "stretch",
+          overflow: "hidden",
+          maxWidth: qrOpen ? 230 : 40,
+          transition: "max-width 320ms ease-out",
+          background: HEADER_GRADIENT,
+          borderRadius: "12px 0 0 12px",
+          boxShadow: "0 6px 14px rgba(0,0,0,0.35)",
+        }}
+      >
+        <div className="fx-grain" style={{ opacity: 0.16, mixBlendMode: "overlay" }} />
+        <button
+          onClick={() => {
+            play("nav-click");
+            setQrOpen((v) => !v);
+          }}
+          style={{
+            flexShrink: 0,
+            width: 40,
+            border: "none",
+            background: "transparent",
+            color: paperPalette.cream,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <span style={{ width: 19, height: 19 }}>
+            <ShareIcon />
+          </span>
+        </button>
+        <div
+          style={{
+            width: 190,
+            flexShrink: 0,
+            padding: "0.8rem 1rem 0.8rem 0.3rem",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "0.5rem",
+          }}
+        >
+          <img
+            src="./qrcode.png"
+            alt="QR code de partage"
+            style={{ width: "100%", borderRadius: 8, background: "#141414", padding: 10, display: "block" }}
+          />
+        </div>
+      </div>
+
       <button
         onClick={() => {
           play("select");

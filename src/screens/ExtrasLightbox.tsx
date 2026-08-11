@@ -1,5 +1,6 @@
 import { useEffect, useRef, type TouchEvent } from "react";
 import { paperPalette, seededRotation, seededSide, TapeStrip } from "../ui/paper";
+import { ChevronLeftIcon, ChevronRightIcon } from "../ui/icons";
 import type { ExtraItem } from "../data/extras";
 
 interface ExtrasLightboxProps {
@@ -15,14 +16,13 @@ const navButtonStyle = {
   position: "absolute" as const,
   top: "50%",
   transform: "translateY(-50%)",
+  zIndex: 2,
   width: 42,
   height: 42,
   borderRadius: "50%",
   border: "none",
   background: "rgba(0,0,0,0.35)",
   color: "#fff",
-  fontSize: "1.5rem",
-  lineHeight: 1,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -89,6 +89,7 @@ export function ExtrasLightbox({ items, index, onClose, onNavigate }: ExtrasLigh
           position: "absolute",
           top: "1.1rem",
           right: "1.1rem",
+          zIndex: 2,
           width: 40,
           height: 40,
           borderRadius: "50%",
@@ -108,7 +109,9 @@ export function ExtrasLightbox({ items, index, onClose, onNavigate }: ExtrasLigh
         }}
         style={{ ...navButtonStyle, left: "0.6rem" }}
       >
-        ‹
+        <span style={{ width: 22, height: 22 }}>
+          <ChevronLeftIcon />
+        </span>
       </button>
       <button
         onClick={(e) => {
@@ -117,7 +120,9 @@ export function ExtrasLightbox({ items, index, onClose, onNavigate }: ExtrasLigh
         }}
         style={{ ...navButtonStyle, right: "0.6rem" }}
       >
-        ›
+        <span style={{ width: 22, height: 22 }}>
+          <ChevronRightIcon />
+        </span>
       </button>
 
       <div
@@ -126,7 +131,7 @@ export function ExtrasLightbox({ items, index, onClose, onNavigate }: ExtrasLigh
           position: "relative",
           background: paperPalette.cream,
           borderRadius: 10,
-          padding: "0.9rem 0.9rem 1.6rem",
+          padding: "0.9rem 0.9rem 3.2rem",
           boxShadow: "0 20px 44px rgba(0,0,0,0.5)",
           transform: `rotate(${seededRotation(item.id, 3)}deg)`,
           maxWidth: "min(88vw, 420px)",
@@ -134,20 +139,32 @@ export function ExtrasLightbox({ items, index, onClose, onNavigate }: ExtrasLigh
         }}
       >
         <TapeStrip side={seededSide(item.id)} />
-        <img
-          src={item.image}
-          alt={item.caption}
-          style={{
-            width: "100%",
-            aspectRatio: "1 / 1",
-            objectFit: "cover",
-            objectPosition: item.objectPosition ?? "center",
-            borderRadius: 6,
-            display: "block",
-          }}
-        />
+        <div style={{ width: "100%", aspectRatio: "1 / 1", overflow: "hidden", borderRadius: 6 }}>
+          <img
+            src={item.image}
+            alt={item.caption}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: item.objectPosition ?? "center",
+              display: "block",
+              transform: `scale(${item.zoom ?? 1})`,
+              transformOrigin: item.objectPosition ?? "center",
+            }}
+          />
+        </div>
         {item.caption && (
-          <div style={{ marginTop: "0.7rem", fontSize: "0.95rem", fontWeight: 600, textAlign: "center", color: paperPalette.ink }}>
+          <div
+            style={{
+              marginTop: "0.7rem",
+              fontSize: "0.95rem",
+              fontWeight: 600,
+              textAlign: "center",
+              color: paperPalette.ink,
+              fontFamily: item.fontFamily,
+            }}
+          >
             {item.caption}
           </div>
         )}

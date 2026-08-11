@@ -119,8 +119,10 @@ export function TapedCard({ children, id, style, onClick, rotationSpread = 2.5 }
         ...style,
       }}
     >
-      <TapeStrip side={side} rotation={rotation * 2.2 - (side === "left" ? 6 : -6)} />
       {children}
+      {/* après children (pas avant) pour peindre par-dessus — retour du 2026-08-11 :
+          "le scotch est derrière les photos donc elles sont coupées". */}
+      <TapeStrip side={side} rotation={rotation * 2.2 - (side === "left" ? 6 : -6)} />
     </Tag>
   );
 }
