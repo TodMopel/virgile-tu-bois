@@ -2,7 +2,7 @@ import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
   appId: "com.coucourecords.virgiletubois",
-  appName: "Virgile Tu Bois",
+  appName: "Sables d'O-Zone",
   webDir: "dist",
 };
 

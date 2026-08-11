@@ -83,7 +83,7 @@ export function HiddenReveal({ scrollRef, src, caption, liftOffset = MAX_PULL }:
         position: "absolute",
         left: 0,
         right: 0,
-        bottom: 0,
+        bottom: 20,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

@@ -15,8 +15,8 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["icons/*.png", "cover/*"],
       manifest: {
-        name: "Virgile Tu Bois — Les Coucous",
-        short_name: "Virgile Tu Bois",
+        name: "Sables d'O-Zone — Les Coucous",
+        short_name: "Sables d'O-Zone",
         description: "Sables d'O-Zone — Cou Cou Records",
         start_url: ".",
         scope: ".",

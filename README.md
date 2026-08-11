@@ -1,4 +1,4 @@
-# Virgile Tu Bois — app USB (Les Coucous / Sables d'O-Zone)
+# Sables d'O-Zone — app USB (Les Coucous)
 
 Voir `../CONTEXT.md` et `../docs/` pour le contexte complet et les décisions (ADR).
 
