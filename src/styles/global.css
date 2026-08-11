@@ -1,0 +1,138 @@
+:root {
+  color-scheme: dark;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+@keyframes scanlines-drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 40px;
+  }
+}
+
+.fx-scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.06) 0px,
+    rgba(255, 255, 255, 0.06) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  animation: scanlines-drift 6s linear infinite;
+}
+
+@keyframes screen-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.screen-fade-in {
+  animation: screen-fade-in 260ms ease-out both;
+}
+
+/* Sweep 100% CSS (pas de JS par frame) : seul moyen d'avoir un mouvement vraiment
+   seamless sur un background-clip:text, qui coûte cher à repeindre en JS/rAF —
+   voir CONTEXT.md, retour "il doit être seamless absolument" du 2026-08-10. */
+/* Le tuilage fait exactement 100vw (voir le gradient dans V01Disco.tsx) : un seul
+   reflet visible qui traverse vraiment toute la largeur de l'écran par boucle, pas
+   plusieurs bandes qui se répètent sur une courte période — retour du 2026-08-10. */
+@keyframes chrome-sweep {
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: -92vw;
+  }
+}
+.fx-chrome-sweep {
+  animation: chrome-sweep 4.2s linear infinite;
+}
+
+@keyframes gold-sweep {
+  0%,
+  68% {
+    background-position-x: 0%;
+  }
+  84% {
+    background-position-x: 100%;
+  }
+  100% {
+    background-position-x: 100%;
+  }
+}
+.fx-gold-sweep {
+  animation: gold-sweep 8s ease-in-out infinite;
+}
+
+@keyframes row-enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.row-enter {
+  animation: row-enter 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes cover-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(0.6deg);
+  }
+}
+.cover-float {
+  animation: cover-float 5s ease-in-out infinite;
+}
+
+.fx-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.12;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.6) 1px, transparent 1px);
+  background-size: 3px 3px;
+}

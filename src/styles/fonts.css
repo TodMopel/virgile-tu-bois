@@ -1,0 +1,61 @@
+/* Polices auto-hébergées (voir src/assets/fonts) — pas de CDN, la clé doit marcher hors ligne. */
+@font-face {
+  font-family: "V01Fredoka";
+  src: url("../assets/fonts/01-fredoka.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "V02Baloo";
+  src: url("../assets/fonts/02-baloo-2.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "V03Stencil";
+  src: url("../assets/fonts/03-stardos-stencil.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "V04Audiowide";
+  src: url("../assets/fonts/04-audiowide.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "V05Pacifico";
+  src: url("../assets/fonts/05-pacifico.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "V06ShareTechMono";
+  src: url("../assets/fonts/06-share-tech-mono.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "V07Anton";
+  src: url("../assets/fonts/07-anton.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "V08Quicksand";
+  src: url("../assets/fonts/08-quicksand.woff2") format("woff2");
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: "V09Marcellus";
+  src: url("../assets/fonts/09-marcellus.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "V10Cinzel";
+  src: url("../assets/fonts/10-cinzel.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
