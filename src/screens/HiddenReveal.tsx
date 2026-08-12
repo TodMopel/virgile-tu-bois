@@ -83,7 +83,7 @@ export function HiddenReveal({ scrollRef, src, caption, liftOffset = MAX_PULL }:
         position: "absolute",
         left: 0,
         right: 0,
-        bottom: 20,
+        bottom: 10,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -100,7 +100,7 @@ export function HiddenReveal({ scrollRef, src, caption, liftOffset = MAX_PULL }:
       <img
         src={src}
         alt={caption ?? "surprise"}
-        style={{ maxWidth: 200, width: "70%", filter: "drop-shadow(0 10px 18px rgba(0,0,0,0.35))" }}
+        style={{ maxWidth: 400, width: "70%", filter: "drop-shadow(0 10px 18px rgba(0,0,0,0.35))" }}
       />
       {caption && <div style={{ fontSize: "0.8rem", fontStyle: "italic", opacity: 0.7 }}>{caption}</div>}
     </div>

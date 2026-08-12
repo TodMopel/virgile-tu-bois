@@ -268,7 +268,7 @@ export function ExtrasScreen() {
                         verso — la couleur de labelStyle est calée pour les fonds sombres
                         des visuels, illisible sur la carte crème, donc on ne reprend que
                         la police */}
-                    <span style={{ fontFamily: track.labelStyle.fontFamily, color: paperPalette.ink, fontSize: "1rem", fontWeight: 600 }}>
+                    <span style={{ fontFamily: TRACK_FONTS[0].label, color: paperPalette.ink, fontSize: "1rem", fontWeight: 600 }}>
                       Virgile tu bois
                     </span>
                   </div>
