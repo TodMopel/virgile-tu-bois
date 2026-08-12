@@ -51,7 +51,7 @@ export function LightBeam({
     const sway = baseAngle + Math.sin(angleRef.current) * amplitude + Math.sin(angleRef.current * 2.2) * amplitude * 0.3 * chaos;
     const bright = 0.18 + energy.bass * 0.45 + chaos * 0.15;
 
-    node.style.transform = `translateX(-50%) rotate(${sway}deg)`;
+    node.style.transform = `translate3d(-50%, 0, 0) rotate3d(0, 0, 1, ${sway}deg)`;
     node.style.opacity = String(bright);
   });
 
@@ -70,6 +70,10 @@ export function LightBeam({
         height: `${heightVh}vh`,
         filter: "blur(20px)",
         pointerEvents: "none",
+        // transform 3D + will-change : promeut le faisceau sur sa propre couche GPU pour
+        // que le blur reste une bitmap en cache repositionnée, au lieu d'être recalculé
+        // à chaque frame — coûteux sur mobile, invisible sur desktop (retour 2026-08-12).
+        willChange: "transform",
         ...style,
       }}
     />

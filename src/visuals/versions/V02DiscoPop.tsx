@@ -13,16 +13,36 @@ import type { VisualProps } from "../types";
 
 // vitesses ralenties (retour 2026-08-10 : "trop bien, juste ralentir pour faire plus
 // lampe à lave" — une vraie lampe à lave est hypnotique et lente).
-// nombre réduit de bulles (retour du 2026-08-11 : ça ramait sur mobile — le filtre
-// "goo" est coûteux par bulle en plus).
+// nombre de bulles doublé (retour du 2026-08-12 : maintenant que le goo est en CSS
+// pur, le coût dominant est le passage de blur/contrast sur tout l'écran, ~indépendant
+// du nombre de bulles — contrairement à l'ancien filtre SVG où chaque bulle coûtait en
+// plus). À valider sur téléphone avant d'aller plus loin.
 const BACKGROUND = "linear-gradient(160deg, #2a0d24, #4a1338)";
 
+// palette "lave" : rouge profond → orange → ambre → doré. L'orange n'est pas un coin
+// du cube RGB (contrairement au rouge/jaune/magenta...) donc il ne survit qu'à un
+// contraste modéré — retour du 2026-08-12 : "je veux des couleurs proches de la lave",
+// contrast(100) écrasait systématiquement l'orange vers rouge ou jaune pur, impossible
+// à garder distinct. D'où la baisse de contraste ci-dessous (voir LavaLamp).
+const BLOB_COLORS = {
+  ember: "#7a1004",
+  red: "#c8140a",
+  orange: "#ff7814",
+  amber: "#ffb428",
+  gold: "#ffd54a",
+};
+
 const BLOBS = [
-  { size: 220, baseX: 28, baseY: 32, speed: 0.26, phase: 0, color: "#dc3995" },
-  { size: 260, baseX: 66, baseY: 58, speed: 0.2, phase: 2.1, color: "#d83b75" },
-  { size: 190, baseX: 46, baseY: 74, speed: 0.3, phase: 4.2, color: "#1ef3da" },
-  { size: 170, baseX: 72, baseY: 22, speed: 0.24, phase: 1.3, color: "#a13dff" },
-  { size: 70, baseX: 18, baseY: 60, speed: 0.34, phase: 3.4, color: "#43aee7" },
+  { size: 220, baseX: 28, baseY: 32, speed: 0.26, phase: 0, color: BLOB_COLORS.orange },
+  { size: 260, baseX: 66, baseY: 58, speed: 0.2, phase: 2.1, color: BLOB_COLORS.red },
+  { size: 190, baseX: 46, baseY: 74, speed: 0.3, phase: 4.2, color: BLOB_COLORS.amber },
+  { size: 170, baseX: 72, baseY: 22, speed: 0.24, phase: 1.3, color: BLOB_COLORS.gold },
+  { size: 70, baseX: 18, baseY: 60, speed: 0.34, phase: 3.4, color: BLOB_COLORS.ember },
+  { size: 200, baseX: 12, baseY: 20, speed: 0.22, phase: 5.0, color: BLOB_COLORS.orange },
+  { size: 150, baseX: 84, baseY: 42, speed: 0.28, phase: 0.6, color: BLOB_COLORS.red },
+  { size: 130, baseX: 54, baseY: 12, speed: 0.32, phase: 4.7, color: BLOB_COLORS.amber },
+  { size: 90, baseX: 30, baseY: 88, speed: 0.38, phase: 2.9, color: BLOB_COLORS.gold },
+  { size: 60, baseX: 92, baseY: 78, speed: 0.4, phase: 1.8, color: BLOB_COLORS.ember },
 ];
 
 function LavaBlob({
@@ -82,8 +102,22 @@ function LavaLamp({ energyRef }: Pick<VisualProps, "energyRef">) {
   // fiable, mais contrast() n'agit que sur RGB (pas l'alpha) : le fond doit donc être
   // opaque et identique à celui du Stage pour que la fusion des bulles reste invisible
   // aux bords du conteneur.
+  // contraste ramené à 5 (retour du 2026-08-12 : palette "lave", l'orange/l'ambre ont
+  // besoin d'un canal vert intermédiaire qui survit seulement à contraste modéré — à
+  // 100, tout collapse vers rouge ou jaune purs). saturate() en plus pour garder les
+  // couleurs vives malgré le contraste plus bas. Contrepartie assumée : la fusion
+  // "goo" entre bulles est plus douce, moins nette — plus proche d'une vraie lampe à
+  // lave de toute façon (bords mous, pas de contour dur).
   return (
-    <div style={{ position: "absolute", inset: 0, overflow: "hidden", background: BACKGROUND, filter: "blur(11px) contrast(26)" }}>
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        overflow: "hidden",
+        background: BACKGROUND,
+        filter: "blur(30px) contrast(5) saturate(.96)",
+      }}
+    >
       {BLOBS.map((b, i) => (
         <LavaBlob key={i} energyRef={energyRef} {...b} />
       ))}
