@@ -52,7 +52,7 @@ function LavaBlob({
     const x = Math.sin(s + phase) * 26 + Math.sin(s * 0.6 + phase) * 14; // vw
     const y = Math.cos(s * 0.8 + phase) * 20; // vh
     const scale = 1 + pulseEnergyRef.current * 0.3 + Math.sin(s * 0.5 + phase) * 0.1;
-    node.style.transform = `translate3d(${x}vw, ${y}vh, 0) scale(${scale})`;
+    node.style.transform = `translate(${x}vw, ${y}vh) scale(${scale})`;
   });
 
   return (
@@ -68,7 +68,6 @@ function LavaBlob({
         marginTop: -size / 2,
         borderRadius: "50%",
         background: color,
-        willChange: "transform",
       }}
     />
   );
