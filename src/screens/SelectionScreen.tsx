@@ -27,7 +27,7 @@ export function SelectionScreen({ onOpenPlayer }: SelectionScreenProps) {
         </div>
       <div
         style={{
-          height: "12.5rem",
+          height: "10.5rem",
         }}
       >
       </div>
