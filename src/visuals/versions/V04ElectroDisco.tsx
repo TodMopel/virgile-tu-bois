@@ -81,14 +81,18 @@ export function V04ElectroDisco({ energyRef }: VisualProps) {
         letterAmplitude={5}
         onFrame={(node, energy, t) => {
           const breathe = 0.7 + 0.3 * Math.sin(t / 1250) + energy.treble * 0.25;
-          const glow = 14 + breathe * 12;
+          // glow réduit + passé en rgba (retour du 2026-08-12 : "glow cramé" sur mobile —
+          // le text-shadow blur de Safari/iOS est plus "solide"/moins dégradé que sur
+          // desktop, donc un halo en couleur opaque à ce rayon ressort comme un bloc plein
+          // au lieu d'une lueur douce. Rayon plus petit + alpha < 1 sur les deux couches.
+          const glow = 10 + breathe * 8;
 
           if (energy.treble - prevTrebleRef.current > 0.25) glitchRef.current = 1;
           prevTrebleRef.current = energy.treble;
           glitchRef.current *= 0.82;
           const g = glitchRef.current * 5;
 
-          node.style.textShadow = `${g}px 0 0 rgba(255,60,220,0.7), ${-g}px 0 0 rgba(120,255,255,0.6), 0 0 ${glow}px #ff2fd6, 0 0 ${glow * 2}px #9b2fff`;
+          node.style.textShadow = `${g}px 0 0 rgba(255,60,220,0.7), ${-g}px 0 0 rgba(120,255,255,0.6), 0 0 ${glow}px rgba(255,47,214,0.65), 0 0 ${glow * 1.6}px rgba(155,47,255,0.4)`;
         }}
         style={{
           fontFamily: "V04Audiowide, sans-serif",

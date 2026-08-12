@@ -25,11 +25,11 @@ const BACKGROUND = "linear-gradient(160deg, #2a0d24, #4a1338)";
 // contrast(100) écrasait systématiquement l'orange vers rouge ou jaune pur, impossible
 // à garder distinct. D'où la baisse de contraste ci-dessous (voir LavaLamp).
 const BLOB_COLORS = {
-  ember: "#7a1004",
-  red: "#c8140a",
-  orange: "#ff7814",
-  amber: "#ffb428",
-  gold: "#ffd54a",
+  ember: "#7a045e",
+  red: "#c80a8c",
+  orange: "#ff7a14",
+  amber: "#d428ff",
+  gold: "#4acfff",
 };
 
 const BLOBS = [

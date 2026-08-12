@@ -519,7 +519,7 @@ export function ExtrasScreen() {
           </TapedCard>
             <div
               style={{
-                height: "3.3rem",
+                height: "8.5rem",
               }}
             >
             </div>
@@ -528,7 +528,7 @@ export function ExtrasScreen() {
           )}
         </div>
       </div>
-      <HiddenReveal scrollRef={scrollRef} src="./extras/hidden-easter-egg.png" liftOffset={80} />
+      <HiddenReveal scrollRef={scrollRef} src="./extras/hidden-easter-egg.png" liftOffset={160} />
     </KraftBackground>
   );
 }
