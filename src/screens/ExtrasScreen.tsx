@@ -457,26 +457,26 @@ export function ExtrasScreen() {
             <div style={{ fontSize: "0.85rem", textAlign: "center", lineHeight: 1.7, opacity: 0.85 }}>
               Scott
               <br />
-              Agathe
+              Agat
             </div>
             <div style={{ height: 1, background: paperPalette.gold, opacity: 0.4, width: "60%", margin: "0.9rem auto" }} />
             <div style={{ fontSize: "0.85rem", textAlign: "center", lineHeight: 1.7, opacity: 0.85 }}>
               <div style={{ fontWeight: 700, marginBottom: "0.2rem" }}>Les Coucous</div>
               Karlito
               <br />
-              Remi
+              Rémy le grain de riz vinaigré
               <br />
-              Virgile
+              Le V
             </div>
             <div style={{ fontSize: "0.85rem", textAlign: "center", lineHeight: 1.7, opacity: 0.85, marginTop: "0.9rem" }}>
               <div style={{ fontWeight: 700, marginBottom: "0.2rem" }}>Remerciments</div>
-              Karlito
+              Karl
               <br />
               Agathe
               <br />
-              Remi
+              Rémy
               <br />
-              Maelle
+              Malek
               <br />
               Quentin
               <br />
@@ -490,7 +490,7 @@ export function ExtrasScreen() {
             </div>
             <div style={{ fontSize: "0.85rem", textAlign: "center", lineHeight: 1.7, opacity: 0.85, marginTop: "0.9rem" }}>
               <div style={{ fontWeight: 700, marginBottom: "0.2rem" }}>Extra remerciments</div>
-              La bonhumeur de Rémi
+              La bonhumeur de Rémy
               <br />
               La persévérance de Karl
               <br />
@@ -500,10 +500,10 @@ export function ExtrasScreen() {
               <br />
               Le "menteur" de Quentin
               <br />
-              La présence de Virgile
+              La "présence" de Virgile
             </div>
             <div style={{ fontSize: "0.8rem", fontStyle: "italic", textAlign: "center", opacity: 0.75, marginTop: "1rem" }}>
-              Merci à Karl de prononcer cette phrase avec autant d'énergie
+              Merci à Karl d'avoir prononcer cette phrase avec autant d'énergie
             </div>
             <div
               style={{
