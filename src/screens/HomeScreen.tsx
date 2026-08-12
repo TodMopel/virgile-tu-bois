@@ -15,6 +15,7 @@ export function HomeScreen({ onEnter }: HomeScreenProps) {
   const { play } = useSfx();
   const { playing, energyRef } = usePlaybackContext();
   const [qrOpen, setQrOpen] = useState(false);
+  const [listenOnlineOpen, setListenOnlineOpen] = useState(false);
 
   // si un morceau joue déjà (lecture persistante), la pochette danse au son au lieu
   // de flotter en boucle CSS — retour du 2026-08-11.
@@ -123,10 +124,54 @@ export function HomeScreen({ onEnter }: HomeScreenProps) {
           <img
             src="./qrcode.png"
             alt="QR code de partage"
-            style={{ width: "100%", borderRadius: 4, background: "#141414", padding: 5, display: "block" }}
+            onClick={() => {
+              play("select");
+              setListenOnlineOpen(true);
+            }}
+            style={{ width: "100%", borderRadius: 4, background: "#141414", padding: 5, display: "block", cursor: "pointer" }}
           />
         </div>
       </div>
+
+      {listenOnlineOpen && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 40,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "rgba(0,0,0,0.92)",
+          }}
+        >
+          <button
+            onClick={() => {
+              play("nav-click");
+              setListenOnlineOpen(false);
+            }}
+            style={{
+              position: "absolute",
+              top: "1rem",
+              left: "1rem",
+              zIndex: 41,
+              border: "none",
+              borderRadius: "999px",
+              padding: "0.5rem 1rem",
+              background: "rgba(255,255,255,0.12)",
+              color: "#fff",
+              fontWeight: 600,
+            }}
+          >
+            ←
+          </button>
+          <img
+            src="./listen-online.png"
+            alt="Écouter en ligne"
+            style={{ maxWidth: "90%", maxHeight: "85%", objectFit: "contain", borderRadius: 8 }}
+          />
+        </div>
+      )}
 
       <button
         onClick={() => {
