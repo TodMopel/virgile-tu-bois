@@ -22,47 +22,51 @@ const BEAMS: { x: string; baseAngle: number; color: string; width: number; speed
   { x: "90%", baseAngle: 8, color: "140,220,255", width: 60, speedScale: 1.1 },
 ];
 
-// 7 lignes blanches qui dansent (balancement + rotation, calées sur les basses) —
-// retour du 2026-08-11, en plus des faisceaux colorés.
-const DANCING_LINES: { x: string; length: number; freq: number; phase: number; swayAmp: number; rotAmp: number }[] = [
-  { x: "12%", length: 130, freq: 1.2, phase: 0.0, swayAmp: 26, rotAmp: 10 },
-  { x: "24%", length: 110, freq: 1.6, phase: 0.9, swayAmp: 22, rotAmp: 14 },
-  { x: "38%", length: 150, freq: 0.9, phase: 1.8, swayAmp: 30, rotAmp: 8 },
-  { x: "50%", length: 120, freq: 1.4, phase: 2.7, swayAmp: 20, rotAmp: 16 },
-  { x: "62%", length: 140, freq: 1.1, phase: 3.6, swayAmp: 28, rotAmp: 9 },
-  { x: "76%", length: 115, freq: 1.7, phase: 4.5, swayAmp: 24, rotAmp: 13 },
-  { x: "88%", length: 135, freq: 1.0, phase: 5.4, swayAmp: 27, rotAmp: 11 },
+// lueur de sol, ferrée au bas de l'écran, du clair au foncé — cycle en continu entre
+// 3 couleurs (rampe de projecteurs), et quand l'énergie monte : le cycle accélère et
+// un clignotement s'ajoute par-dessus (retour du 2026-08-12).
+const GLOW_COLORS: [number, number, number][] = [
+  [255, 225, 180], // chaud
+  [140, 220, 255], // bleu
+  [180, 140, 255], // violet
 ];
 
-interface DancingLineProps extends Pick<VisualProps, "energyRef"> {
-  x: string;
-  length: number;
-  freq: number;
-  phase: number;
-  swayAmp: number;
-  rotAmp: number;
+function lerp(a: number, b: number, t: number) {
+  return a + (b - a) * t;
 }
 
-function DancingLine({ energyRef, x, length, freq, phase, swayAmp, rotAmp }: DancingLineProps) {
-  const clockRef = useRef(phase * 3);
+function TempoGlow({ energyRef }: Pick<VisualProps, "energyRef">) {
+  const levelRef = useRef(0);
+  const clockRef = useRef(0);
   const lastTRef = useRef<number | null>(null);
-  const speedMulRef = useRef(1);
+  const cycleSpeedRef = useRef(1);
 
   const ref = useImperativeAnimation<HTMLDivElement>(energyRef, (node, energy, t) => {
     const last = lastTRef.current ?? t;
     const dt = Math.max(0, Math.min(0.1, (t - last) / 1000));
     lastTRef.current = t;
 
-    speedMulRef.current = smoothTo(speedMulRef.current, 1 + energy.bass * 2.2, 0.06);
-    clockRef.current += dt * freq * speedMulRef.current;
-    const s = clockRef.current;
+    levelRef.current = smoothTo(levelRef.current, energy.bass, 0.15);
+    // le cycle des couleurs s'accélère avec l'énergie — lent au repos, rapide sur les pics.
+    cycleSpeedRef.current = smoothTo(cycleSpeedRef.current, 1 + energy.bass * 7, 0.05);
+    clockRef.current += dt * 0.3 * cycleSpeedRef.current;
 
-    const sway = Math.sin(s + phase) * swayAmp;
-    const rotate = Math.sin(s * 1.3 + phase) * rotAmp * (0.6 + energy.bass * 0.6);
-    const scaleY = 1 + energy.bass * 0.2;
+    const pos = clockRef.current % GLOW_COLORS.length;
+    const i = Math.floor(pos);
+    const frac = pos - i;
+    const [r1, g1, b1] = GLOW_COLORS[i];
+    const [r2, g2, b2] = GLOW_COLORS[(i + 1) % GLOW_COLORS.length];
+    const r = Math.round(lerp(r1, r2, frac));
+    const g = Math.round(lerp(g1, g2, frac));
+    const b = Math.round(lerp(b1, b2, frac));
 
-    node.style.transform = `translateX(${sway}px) rotate(${rotate}deg) scaleY(${scaleY})`;
-    node.style.opacity = String(0.55 + energy.bass * 0.45);
+    // clignotement qui n'apparaît qu'au-dessus d'un certain niveau d'énergie, et
+    // dont l'amplitude/vitesse grandit avec elle.
+    const flicker = levelRef.current > 0.45 ? Math.sin(t / 40) * (levelRef.current - 0.45) * 1.4 : 0;
+    const brightness = 0.25 + levelRef.current * 0.6 + flicker;
+
+    node.style.background = `radial-gradient(ellipse 120% 60% at 50% 100%, rgba(${r},${g},${b},0.9), rgba(${r},${g},${b},0) 70%)`;
+    node.style.opacity = String(Math.max(0.12, Math.min(1, brightness)));
   });
 
   return (
@@ -70,14 +74,9 @@ function DancingLine({ energyRef, x, length, freq, phase, swayAmp, rotAmp }: Dan
       ref={ref}
       style={{
         position: "absolute",
-        left: x,
-        bottom: 0,
-        width: 3,
-        height: length,
-        transformOrigin: "bottom center",
-        background: "linear-gradient(0deg, rgba(255,255,255,0.95), rgba(255,255,255,0))",
-        boxShadow: "0 0 10px 1px rgba(255,255,255,0.85)",
+        inset: 0,
         pointerEvents: "none",
+        background: "radial-gradient(ellipse 120% 60% at 50% 100%, rgba(255,225,180,0.9), rgba(255,225,180,0) 70%)",
       }}
     />
   );
@@ -94,11 +93,9 @@ export function V07TechnoHouseBoomBap({ energyRef }: VisualProps) {
       flashBand="bass"
       flashColor="231,227,216"
     >
+      <TempoGlow energyRef={energyRef} />
       {BEAMS.map((b, i) => (
         <LightBeam key={i} energyRef={energyRef} from="bottom" heightVh={170} band="bass" {...b} />
-      ))}
-      {DANCING_LINES.map((l, i) => (
-        <DancingLine key={i} energyRef={energyRef} {...l} />
       ))}
       <div className="fx-grain" />
       <div style={{ width: 54, height: 54, color: "#e7e3d8", opacity: 0.9 }}>

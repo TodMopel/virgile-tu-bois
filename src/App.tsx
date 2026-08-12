@@ -22,7 +22,7 @@ export default function App() {
       </ScreenFade>
 
       {screen !== "home" && screen !== "player" && <MiniPlayer onOpen={() => setScreen("player")} />}
-      {screen !== "home" && <MenuBar current={screen} onNavigate={setScreen} />}
+      {screen !== "home" && screen !== "player" && <MenuBar current={screen} onNavigate={setScreen} />}
     </div>
   );
 }

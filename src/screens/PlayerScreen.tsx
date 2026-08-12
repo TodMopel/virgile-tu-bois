@@ -8,7 +8,9 @@ interface PlayerScreenProps {
   onBack: () => void;
 }
 
-const NAV_HEIGHT = "calc(5.2rem + env(safe-area-inset-bottom))";
+// le MenuBar n'est plus affiché sur cet écran (retour du 2026-08-12 : meilleure vue
+// sur le visuel) — juste la marge de sécurité en bas, plus l'espace réservé au nav.
+const CONTROLS_BOTTOM_GAP = "calc(0.8rem + env(safe-area-inset-bottom))";
 
 // Lit le morceau depuis le contexte de lecture global (voir audio/PlaybackContext) —
 // ne redémarre jamais un morceau déjà en cours (la sélection déclenche la lecture,
@@ -104,7 +106,7 @@ export function PlayerScreen({ onBack }: PlayerScreenProps) {
           position: "absolute",
           left: 0,
           right: 0,
-          bottom: NAV_HEIGHT,
+          bottom: CONTROLS_BOTTOM_GAP,
           zIndex: 10,
           padding: "0 1rem 0.6rem",
         }}
