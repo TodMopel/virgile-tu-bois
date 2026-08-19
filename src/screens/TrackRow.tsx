@@ -1,6 +1,7 @@
 import type { Track } from "../data/tracks";
 import { usePlaybackContext } from "../audio/PlaybackContext";
 import { useSfx } from "../audio/useSfx";
+import { useEffectiveTrackOverride } from "../config/store";
 import { TapedCard, StampBadge, paperPalette } from "../ui/paper";
 import { EqualizerBars } from "../visuals/shared/EqualizerBars";
 import { useImperativeAnimation } from "../visuals/shared/useImperativeAnimation";
@@ -19,6 +20,7 @@ interface TrackRowProps {
 export function TrackRow({ track, index, onOpen }: TrackRowProps) {
   const { currentTrack, playing, energyRef, selectTrack, toggle } = usePlaybackContext();
   const { play: playSfx } = useSfx();
+  const override = useEffectiveTrackOverride(track.id);
   const isActive = currentTrack?.id === track.id;
 
   const thumbRef = useImperativeAnimation<HTMLDivElement>(energyRef, (node, energy) => {
@@ -75,7 +77,7 @@ export function TrackRow({ track, index, onOpen }: TrackRowProps) {
               transform: "scale(1.15)",
             }}
           />
-          <div style={{ position: "absolute", inset: 0, background: track.swatch, opacity: 0.62, mixBlendMode: "color" }} />
+          <div style={{ position: "absolute", inset: 0, background: override.accentColor ?? track.swatch, opacity: 0.62, mixBlendMode: "color" }} />
           <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.28)" }} />
           <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <span
@@ -87,6 +89,7 @@ export function TrackRow({ track, index, onOpen }: TrackRowProps) {
                 padding: "0 6px",
                 textShadow: "0 1px 3px rgba(0,0,0,0.6)",
                 ...track.labelStyle,
+                fontFamily: override.titleFontFamily ?? track.labelStyle.fontFamily,
               }}
             >
               VIRGILE TU BOIS

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSfx } from "../audio/useSfx";
 import { usePlaybackContext } from "../audio/PlaybackContext";
 import { useImperativeAnimation } from "../visuals/shared/useImperativeAnimation";
+import { useEffectiveHomeOverride } from "../config/store";
 import { paperPalette } from "../ui/paper";
 import { ShareIcon } from "../ui/icons";
 
@@ -16,6 +17,8 @@ export function HomeScreen({ onEnter }: HomeScreenProps) {
   const { playing, energyRef } = usePlaybackContext();
   const [qrOpen, setQrOpen] = useState(false);
   const [listenOnlineOpen, setListenOnlineOpen] = useState(false);
+  const homeOverride = useEffectiveHomeOverride();
+  const coverIntensity = homeOverride.coverIntensity ?? 1;
 
   // si un morceau joue déjà (lecture persistante), la pochette danse au son au lieu
   // de flotter en boucle CSS — retour du 2026-08-11.
@@ -24,10 +27,10 @@ export function HomeScreen({ onEnter }: HomeScreenProps) {
       node.style.transform = "";
       return;
     }
-    const bob = Math.sin(t / 900) * 8;
-    const bump = energy.bass * 18;
-    const sway = Math.sin(t / 650) * 1.2 + energy.mid * 1.8;
-    const pulse = 1 + energy.overall * 0.05;
+    const bob = Math.sin(t / 900) * 8 * coverIntensity;
+    const bump = energy.bass * 18 * coverIntensity;
+    const sway = (Math.sin(t / 650) * 1.2 + energy.mid * 1.8) * coverIntensity;
+    const pulse = 1 + energy.overall * 0.05 * coverIntensity;
     node.style.transform = `translateY(${-bob - bump}px) rotate(${sway}deg) scale(${pulse})`;
   });
 
@@ -39,7 +42,7 @@ export function HomeScreen({ onEnter }: HomeScreenProps) {
         display: "flex",
         alignItems: "flex-end",
         justifyContent: "center",
-        background: "#1c130b",
+        background: homeOverride.backgroundColor ?? "#1c130b",
       }}
     >
       {/* jaquette en entier, jamais recadrée, plus petite que l'écran et qui flotte

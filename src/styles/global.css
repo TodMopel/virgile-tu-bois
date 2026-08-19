@@ -73,16 +73,30 @@ button {
 /* Le tuilage fait exactement 100vw (voir le gradient dans V01Disco.tsx) : un seul
    reflet visible qui traverse vraiment toute la largeur de l'écran par boucle, pas
    plusieurs bandes qui se répètent sur une courte période — retour du 2026-08-10. */
+/* Repris du principe "immobile → reflet → immobile" de gold-sweep (V10) — voir
+   CONTEXT.md, retour 2026-08-19 ("le shine de la 01 ne me plaît pas, il fonctionne
+   sur la dernière"). Avant : défilement linéaire sans pause (repeating-gradient),
+   jamais stable. Timing plus court/punchy que gold-sweep (5s vs 8s) pour rester dans
+   l'esprit disco plutôt que la lenteur "luxe" de l'orchestral. */
 @keyframes chrome-sweep {
-  from {
-    background-position-x: 0;
+  /* positions de départ/arrivée inversées (retour du 2026-08-19 : "glisser de gauche à
+     droite au lieu de droite à gauche") — le dégradé est symétrique autour de 50%, donc
+     0% et 100% masquent tous les deux le reflet de la même façon, seul le sens change. */
+  0%,
+  55% {
+    background-position-x: 100%;
   }
-  to {
-    background-position-x: -92vw;
+  72% {
+    background-position-x: 0%;
+  }
+  100% {
+    background-position-x: 0%;
   }
 }
 .fx-chrome-sweep {
-  animation: chrome-sweep 4.2s linear infinite;
+  /* --shine-speed posée en inline style par V01Disco.tsx (panneau ?edit, réglage
+     "Vitesse du reflet") — 1 = valeur par défaut. */
+  animation: chrome-sweep calc(5s / var(--shine-speed, 1)) ease-in-out infinite;
 }
 
 @keyframes gold-sweep {
@@ -98,7 +112,9 @@ button {
   }
 }
 .fx-gold-sweep {
-  animation: gold-sweep 8s ease-in-out infinite;
+  /* --shine-speed posée en inline style par V10Orchestral.tsx (panneau ?edit, réglage
+     "Vitesse du reflet") — 1 = valeur par défaut. */
+  animation: gold-sweep calc(8s / var(--shine-speed, 1)) ease-in-out infinite;
 }
 
 @keyframes row-enter {

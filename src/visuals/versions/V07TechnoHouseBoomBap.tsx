@@ -82,20 +82,22 @@ function TempoGlow({ energyRef }: Pick<VisualProps, "energyRef">) {
   );
 }
 
-export function V07TechnoHouseBoomBap({ energyRef }: VisualProps) {
+export function V07TechnoHouseBoomBap({ energyRef, background, titleFontFamily, custom }: VisualProps) {
   const prevBassRef = useRef(0);
   const impactRef = useRef(0);
+  const beamScale = custom?.beamScale ?? 1;
+  const beamGlow = custom?.beamGlow ?? 1;
 
   return (
     <Stage
-      background="linear-gradient(135deg, #111114, #303036)"
+      background={background ?? "linear-gradient(135deg, #111114, #303036)"}
       energyRef={energyRef}
       flashBand="bass"
       flashColor="231,227,216"
     >
       <TempoGlow energyRef={energyRef} />
       {BEAMS.map((b, i) => (
-        <LightBeam key={i} energyRef={energyRef} from="bottom" heightVh={170} band="bass" {...b} />
+        <LightBeam key={i} energyRef={energyRef} from="bottom" heightVh={170} band="bass" {...b} width={b.width * beamScale} glowBoost={beamGlow} />
       ))}
       <div className="fx-grain" />
       <div style={{ width: 54, height: 54, color: "#e7e3d8", opacity: 0.9 }}>
@@ -119,10 +121,13 @@ export function V07TechnoHouseBoomBap({ energyRef }: VisualProps) {
           node.style.transform = `scale(${1 + p * 0.1}, ${1 - p * 0.16})`;
         }}
         style={{
-          fontFamily: "V07Anton, sans-serif",
+          fontFamily: titleFontFamily ?? "V07Anton, sans-serif",
           color: "#e7e3d8",
           textShadow: "3px 3px 0 #000, -1px -1px 0 rgba(255,255,255,0.15)",
           transformOrigin: "center bottom",
+          // "allumé" par les faisceaux (même technique que la 01, voir son commentaire) —
+          // retour du 2026-08-19.
+          mixBlendMode: "screen",
         }}
       />
     </Stage>

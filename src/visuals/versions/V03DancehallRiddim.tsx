@@ -66,10 +66,11 @@ function WaveLayer({ energyRef, baseY, amplitude, freq, speed, color, opacity }:
   return <path ref={ref} d={buildSmoothWavePath(baseY, amplitude, 0, freq)} fill={color} opacity={opacity} />;
 }
 
-export function V03DancehallRiddim({ energyRef }: VisualProps) {
+export function V03DancehallRiddim({ energyRef, background, titleFontFamily, custom }: VisualProps) {
+  const waveScale = custom?.waveScale ?? 1;
   return (
     <Stage
-      background="linear-gradient(160deg, #0c1f12, #123a1f)"
+      background={background ?? "linear-gradient(160deg, #0c1f12, #123a1f)"}
       energyRef={energyRef}
       flashBand="bass"
       flashColor="63,174,95"
@@ -83,9 +84,9 @@ export function V03DancehallRiddim({ energyRef }: VisualProps) {
         preserveAspectRatio="none"
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
       >
-        <WaveLayer energyRef={energyRef} baseY={58} amplitude={5} freq={2.6} speed={0.28} color="#123a1f" opacity={0.9} />
-        <WaveLayer energyRef={energyRef} baseY={67} amplitude={6} freq={1.8} speed={0.38} color="#1f7a3f" opacity={0.85} />
-        <WaveLayer energyRef={energyRef} baseY={76} amplitude={7} freq={1.3} speed={0.5} color="#3fae5f" opacity={0.8} />
+        <WaveLayer energyRef={energyRef} baseY={58} amplitude={5 * waveScale} freq={2.6} speed={0.28} color="#123a1f" opacity={0.9} />
+        <WaveLayer energyRef={energyRef} baseY={67} amplitude={6 * waveScale} freq={1.8} speed={0.38} color="#1f7a3f" opacity={0.85} />
+        <WaveLayer energyRef={energyRef} baseY={76} amplitude={7 * waveScale} freq={1.3} speed={0.5} color="#3fae5f" opacity={0.8} />
       </svg>
 
       <TitleText
@@ -97,7 +98,7 @@ export function V03DancehallRiddim({ energyRef }: VisualProps) {
         letterBand="bass"
         letterAmplitude={6}
         style={{
-          fontFamily: "V03Stencil, sans-serif",
+          fontFamily: titleFontFamily ?? "V03Stencil, sans-serif",
           color: "#3fae5f",
           textShadow: "0 0.15em 0 #1f7a3f, 0 0.3em 0.1em rgba(31,122,63,0.5)",
           letterSpacing: "0.04em",

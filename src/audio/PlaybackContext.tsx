@@ -3,6 +3,9 @@ import { tracks, type Track } from "../data/tracks";
 import { energyAt } from "./analysis";
 import { SILENT_FRAME, type EnergyFrame } from "../visuals/types";
 import { smoothTo } from "../visuals/shared/easing";
+import { getEffectiveTrackOverride } from "../config/store";
+
+const INTENSITY_MAX = 3;
 
 export type RepeatMode = "all" | "one";
 
@@ -153,10 +156,14 @@ export function PlaybackProvider({ children }: { children: ReactNode }) {
       const e = energyRef.current;
       if (a && track && !a.paused) {
         const raw = energyAt(track.analysis, a.currentTime);
-        e.bass = smoothTo(e.bass, raw.bass, SMOOTH_ALPHA);
-        e.mid = smoothTo(e.mid, raw.mid, SMOOTH_ALPHA);
-        e.treble = smoothTo(e.treble, raw.treble, SMOOTH_ALPHA);
-        e.overall = smoothTo(e.overall, raw.overall, SMOOTH_ALPHA);
+        // intensité réglable depuis le panneau ?edit — multiplicateur d'amplitude, lu
+        // directement sur le store (pas de hook/state ici : cette boucle tourne à 60fps
+        // hors du cycle de rendu React, voir CONTEXT.md).
+        const intensity = Math.min(INTENSITY_MAX, Math.max(0, getEffectiveTrackOverride(track.id).intensity ?? 1));
+        e.bass = smoothTo(e.bass, raw.bass * intensity, SMOOTH_ALPHA);
+        e.mid = smoothTo(e.mid, raw.mid * intensity, SMOOTH_ALPHA);
+        e.treble = smoothTo(e.treble, raw.treble * intensity, SMOOTH_ALPHA);
+        e.overall = smoothTo(e.overall, raw.overall * intensity, SMOOTH_ALPHA);
 
         const now = performance.now();
         if (now - lastStateUpdateRef.current > STATE_UPDATE_INTERVAL_MS) {

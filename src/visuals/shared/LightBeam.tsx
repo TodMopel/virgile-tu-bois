@@ -13,6 +13,9 @@ interface LightBeamProps extends Pick<VisualProps, "energyRef"> {
   from?: "top" | "bottom";
   /** Certains faisceaux plus lents que d'autres (retour 2026-08-10) : <1 = plus lent. */
   speedScale?: number;
+  /** Multiplie l'opacité/éclat du faisceau — utilisé pour rendre visible l'illumination
+   * du texte en dessous (mix-blend-mode: screen, voir V01Disco.tsx/V07TechnoHouseBoomBap.tsx). */
+  glowBoost?: number;
 }
 
 // Faisceau de lumière qui, au repos, se balance doucement — et à mesure que l'énergie
@@ -29,6 +32,7 @@ export function LightBeam({
   band = "bass",
   from = "top",
   speedScale = 1,
+  glowBoost = 1,
 }: LightBeamProps) {
   const angleRef = useRef(Math.random() * 10);
   const lastTRef = useRef<number | null>(null);
@@ -49,10 +53,10 @@ export function LightBeam({
     const chaos = Math.max(0, Math.min(1, (speedMulRef.current - 1) / 4));
     const amplitude = 12 + chaos * 38;
     const sway = baseAngle + Math.sin(angleRef.current) * amplitude + Math.sin(angleRef.current * 2.2) * amplitude * 0.3 * chaos;
-    const bright = 0.18 + energy.bass * 0.45 + chaos * 0.15;
+    const bright = (0.18 + energy.bass * 0.45 + chaos * 0.15) * glowBoost;
 
     node.style.transform = `translate3d(-50%, 0, 0) rotate3d(0, 0, 1, ${sway}deg)`;
-    node.style.opacity = String(bright);
+    node.style.opacity = String(Math.min(1, bright));
   });
 
   const style =

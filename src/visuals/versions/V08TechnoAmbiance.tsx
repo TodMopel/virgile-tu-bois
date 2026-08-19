@@ -37,7 +37,9 @@ function BreathingHaze({ energyRef }: Pick<VisualProps, "energyRef">) {
 // Particules qui viennent de hors-écran et se fondent (rétrécissent + s'estompent) au
 // centre, happées par la lueur qui respire — retour du 2026-08-11. Angle en pas d'angle
 // d'or pour une répartition régulière sans motif visible.
-const PARTICLES = Array.from({ length: 18 }, (_, i) => ({
+// 30 générées, 18 actives par défaut — au-delà, activables via "Nombre de particules"
+// (?edit, retour du 2026-08-19 : "pouvoir en mettre plus").
+const PARTICLES = Array.from({ length: 30 }, (_, i) => ({
   angle: (i * 137.5) % 360,
   size: 3 + ((i * 7) % 5),
   speed: 0.16 + ((i * 11) % 10) / 55,
@@ -101,10 +103,11 @@ function ConvergingParticle({ energyRef, angle, size, speed, delay }: Converging
 
 const FONT_CYCLE = ["V08Quicksand", "V06ShareTechMono", "V01Fredoka", "V09Marcellus"];
 
-export function V08TechnoAmbiance({ energyRef }: VisualProps) {
+export function V08TechnoAmbiance({ energyRef, background, titleFontFamily, custom }: VisualProps) {
+  const particleCount = Math.round(custom?.particleCount ?? PARTICLES.length);
   return (
-    <Stage background="linear-gradient(135deg, #0a1a2a, #1b3550)" energyRef={energyRef} flashBand="mid" flashColor="210,226,240">
-      {PARTICLES.map((p, i) => (
+    <Stage background={background ?? "linear-gradient(135deg, #0a1a2a, #1b3550)"} energyRef={energyRef} flashBand="mid" flashColor="210,226,240">
+      {PARTICLES.slice(0, particleCount).map((p, i) => (
         <ConvergingParticle key={i} energyRef={energyRef} {...p} />
       ))}
       <BreathingHaze energyRef={energyRef} />
@@ -118,7 +121,7 @@ export function V08TechnoAmbiance({ energyRef }: VisualProps) {
         letterAmplitude={26}
         letterFontCycle={FONT_CYCLE}
         style={{
-          fontFamily: "V08Quicksand, sans-serif",
+          fontFamily: titleFontFamily ?? "V08Quicksand, sans-serif",
           fontWeight: 300,
           color: "rgba(210, 226, 240, 0.85)",
           letterSpacing: "0.06em",

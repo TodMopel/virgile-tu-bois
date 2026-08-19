@@ -1,5 +1,6 @@
 import { usePlaybackContext } from "../audio/PlaybackContext";
 import { useSfx } from "../audio/useSfx";
+import { useEffectiveTrackOverride } from "../config/store";
 import { paperPalette } from "../ui/paper";
 import { EqualizerBars } from "../visuals/shared/EqualizerBars";
 import { useHiddenRevealLift } from "./HiddenRevealLift";
@@ -17,6 +18,7 @@ export function MiniPlayer({ onOpen }: MiniPlayerProps) {
   const { currentTrack, playing, energyRef, toggle } = usePlaybackContext();
   const { play: playSfx } = useSfx();
   const { lift } = useHiddenRevealLift();
+  const override = useEffectiveTrackOverride(currentTrack?.id ?? "");
 
   if (!currentTrack) return null;
 
@@ -77,7 +79,7 @@ export function MiniPlayer({ onOpen }: MiniPlayerProps) {
               transform: "scale(1.15)",
             }}
           />
-          <div style={{ position: "absolute", inset: 0, background: currentTrack.swatch, opacity: 0.62, mixBlendMode: "color" }} />
+          <div style={{ position: "absolute", inset: 0, background: override.accentColor ?? currentTrack.swatch, opacity: 0.62, mixBlendMode: "color" }} />
           <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.28)" }} />
           <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <span
@@ -89,6 +91,7 @@ export function MiniPlayer({ onOpen }: MiniPlayerProps) {
                 padding: "0 2px",
                 textShadow: "0 1px 3px rgba(0,0,0,0.6)",
                 ...currentTrack.labelStyle,
+                fontFamily: override.titleFontFamily ?? currentTrack.labelStyle.fontFamily,
               }}
             >
               VIRGILE TU BOIS

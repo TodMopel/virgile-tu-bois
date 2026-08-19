@@ -10,7 +10,9 @@ import type { VisualProps } from "../types";
 // organiques (plus des segments droits qui pivotaient — retour du 2026-08-10 :
 // "adapte tes traits moches par nos belles courbes").
 
-const SPARKS = Array.from({ length: 14 }, (_, i) => ({
+// 24 générées, 14 actives par défaut — au-delà, activables via "Nombre d'étincelles"
+// (?edit, retour du 2026-08-19 : "pouvoir en mettre plus").
+const SPARKS = Array.from({ length: 24 }, (_, i) => ({
   x: (i * 37) % 100,
   size: 2 + ((i * 13) % 4),
   speed: 0.4 + ((i * 7) % 10) / 20,
@@ -46,14 +48,15 @@ function Spark({ energyRef, x, size, speed, delay }: Pick<VisualProps, "energyRe
   );
 }
 
-export function V04ElectroDisco({ energyRef }: VisualProps) {
+export function V04ElectroDisco({ energyRef, background, titleFontFamily, custom }: VisualProps) {
   const prevTrebleRef = useRef(0);
   const glitchRef = useRef(0);
+  const sparkCount = Math.round(custom?.sparkCount ?? SPARKS.length);
 
   return (
-    <Stage background="linear-gradient(135deg, #1a0022, #3a0057)" energyRef={energyRef} flashBand="treble" flashColor="255,47,214">
+    <Stage background={background ?? "linear-gradient(135deg, #1a0022, #3a0057)"} energyRef={energyRef} flashBand="treble" flashColor="255,47,214">
       <div className="fx-scanlines" />
-      {SPARKS.map((s, i) => (
+      {SPARKS.slice(0, sparkCount).map((s, i) => (
         <Spark key={i} energyRef={energyRef} {...s} />
       ))}
       <svg
@@ -95,7 +98,7 @@ export function V04ElectroDisco({ energyRef }: VisualProps) {
           node.style.textShadow = `${g}px 0 0 rgba(255,60,220,0.7), ${-g}px 0 0 rgba(120,255,255,0.6), 0 0 ${glow}px rgba(255,47,214,0.65), 0 0 ${glow * 1.6}px rgba(155,47,255,0.4)`;
         }}
         style={{
-          fontFamily: "V04Audiowide, sans-serif",
+          fontFamily: titleFontFamily ?? "V04Audiowide, sans-serif",
           color: "transparent",
           WebkitTextStroke: "2px #ff2fd6",
         }}

@@ -1,4 +1,4 @@
-import { useRef, type RefObject } from "react";
+import { useRef, type CSSProperties, type RefObject } from "react";
 import { Stage } from "../shared/Stage";
 import { TitleText } from "../shared/TitleText";
 import { useImperativeAnimation } from "../shared/useImperativeAnimation";
@@ -9,7 +9,9 @@ import type { VisualProps } from "../types";
 // "vibration" signalée), et d'autres paillettes dorées arrivent quand cette tendance
 // devient "épique". Troisième passe, 2026-08-10.
 
-const GLITTERS = Array.from({ length: 20 }, (_, i) => ({
+// 32 générées, 20 actives par défaut — au-delà, activables via "Nombre de paillettes"
+// (?edit, retour du 2026-08-19 : "pouvoir en mettre plus").
+const GLITTERS = Array.from({ length: 32 }, (_, i) => ({
   x: (i * 23) % 100,
   size: 2 + ((i * 7) % 3),
   speed: 0.35 + ((i * 11) % 10) / 22,
@@ -92,12 +94,14 @@ function EpicGlitter({
   );
 }
 
-export function V10Orchestral({ energyRef }: VisualProps) {
+export function V10Orchestral({ energyRef, background, titleFontFamily, custom }: VisualProps) {
   const epicRef = useRef(0);
+  const glitterCount = Math.round(custom?.glitterCount ?? GLITTERS.length);
+  const shineSpeed = custom?.shineSpeed ?? 1;
 
   return (
-    <Stage background="linear-gradient(180deg, #fdf3d8 0%, #f6d68f 24%, #c99a4a 58%, #6e4a1c 100%)" energyRef={energyRef} flashBand="overall" flashColor="255,240,200">
-      {GLITTERS.map((g, i) => (
+    <Stage background={background ?? "linear-gradient(180deg, #fdf3d8 0%, #f6d68f 24%, #c99a4a 58%, #6e4a1c 100%)"} energyRef={energyRef} flashBand="overall" flashColor="255,240,200">
+      {GLITTERS.slice(0, glitterCount).map((g, i) => (
         <Glitter key={i} energyRef={energyRef} {...g} />
       ))}
       {EPIC_GLITTERS.map((g, i) => (
@@ -110,7 +114,7 @@ export function V10Orchestral({ energyRef }: VisualProps) {
         pulseAmount={0}
         className="fx-gold-sweep"
         style={{
-          fontFamily: "V10Cinzel, serif",
+          fontFamily: titleFontFamily ?? "V10Cinzel, serif",
           fontWeight: 700,
           backgroundImage: "linear-gradient(100deg, #5c3c14 0%, #5c3c14 42%, #241708 50%, #5c3c14 58%, #5c3c14 100%)",
           backgroundSize: "300% 100%",
@@ -119,7 +123,10 @@ export function V10Orchestral({ energyRef }: VisualProps) {
           WebkitTextStroke: "0.5px rgba(36,23,8,0.5)",
           color: "transparent",
           textShadow: "0 1px 0 rgba(255,255,255,0.5)",
-        }}
+          // valeur de prop CSS personnalisée : doit être une chaîne, une assignation
+          // numérique directe est silencieusement ignorée par certains navigateurs.
+          ["--shine-speed" as string]: String(shineSpeed),
+        } as CSSProperties}
       />
     </Stage>
   );

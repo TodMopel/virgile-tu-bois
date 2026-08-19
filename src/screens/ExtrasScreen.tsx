@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { extras, type ExtraItem } from "../data/extras";
 import { tracks } from "../data/tracks";
+import { TRACK_FONTS } from "../config/fonts";
+import { parseCreditsText } from "../config/credits";
+import { setCreditsTextOverride, useEffectiveCreditsText } from "../config/store";
 import { KraftBackground, TapedCard, TornBanner, hashString, paperPalette } from "../ui/paper";
 import { HiddenReveal } from "./HiddenReveal";
 import { ExtrasLightbox } from "./ExtrasLightbox";
@@ -8,21 +11,6 @@ import { ExtrasLightbox } from "./ExtrasLightbox";
 type ExtraOverride = Partial<Pick<ExtraItem, "caption" | "objectPosition" | "zoom" | "fontFamily">>;
 
 const EDIT_STORAGE_KEY = "extras-edit-overrides";
-
-// Polices des 10 versions (voir data/tracks.ts, labelStyle.fontFamily) — reprises telles
-// quelles pour que les légendes des extras piochent dans la même famille visuelle.
-const TRACK_FONTS = [
-  { label: "01 · Fredoka", value: "V01Fredoka, sans-serif" },
-  { label: "02 · Baloo", value: "V02Baloo, sans-serif" },
-  { label: "03 · Stencil", value: "V03Stencil, sans-serif" },
-  { label: "04 · Audiowide", value: "V04Audiowide, sans-serif" },
-  { label: "05 · Pacifico", value: "V05Pacifico, cursive" },
-  { label: "06 · Share Tech Mono", value: "V06ShareTechMono, monospace" },
-  { label: "07 · Anton", value: "V07Anton, sans-serif" },
-  { label: "08 · Quicksand", value: "V08Quicksand, sans-serif" },
-  { label: "09 · Marcellus", value: "V09Marcellus, serif" },
-  { label: "10 · Cinzel", value: "V10Cinzel, serif" },
-];
 
 const ZOOM_MIN = 1;
 const ZOOM_MAX = 3;
@@ -143,6 +131,8 @@ export function ExtrasScreen() {
   const { editMode, overrides, setOverride } = useExtrasEditMode();
   const gridRef = useRef<HTMLDivElement>(null);
   const [columns, setColumns] = useState(2);
+  const creditsText = useEffectiveCreditsText();
+  const creditsParagraphs = parseCreditsText(creditsText);
 
   useEffect(() => {
     const el = gridRef.current;
@@ -454,57 +444,55 @@ export function ExtrasScreen() {
             >
               Crédits
             </div>
-            <div style={{ fontSize: "0.85rem", textAlign: "center", lineHeight: 1.7, opacity: 0.85 }}>
-              Scott
-              <br />
-              Agat
-            </div>
-            <div style={{ height: 1, background: paperPalette.gold, opacity: 0.4, width: "60%", margin: "0.9rem auto" }} />
-            <div style={{ fontSize: "0.85rem", textAlign: "center", lineHeight: 1.7, opacity: 0.85 }}>
-              <div style={{ fontWeight: 700, marginBottom: "0.2rem" }}>Les Coucous</div>
-              Karlito
-              <br />
-              Rémy le grain de riz vinaigré
-              <br />
-              Le V
-            </div>
-            <div style={{ fontSize: "0.85rem", textAlign: "center", lineHeight: 1.7, opacity: 0.85, marginTop: "0.9rem" }}>
-              <div style={{ fontWeight: 700, marginBottom: "0.2rem" }}>Remerciments</div>
-              Karl
-              <br />
-              Agathe
-              <br />
-              Rémy
-              <br />
-              Malek
-              <br />
-              Quentin
-              <br />
-              Manon
-              <br />
-              Pio
-              <br />
-              Eliot
-              <br />
-              Tiphaine
-            </div>
-            <div style={{ fontSize: "0.85rem", textAlign: "center", lineHeight: 1.7, opacity: 0.85, marginTop: "0.9rem" }}>
-              <div style={{ fontWeight: 700, marginBottom: "0.2rem" }}>Extra remerciments</div>
-              La bonhumeur de Rémy
-              <br />
-              La persévérance de Karl
-              <br />
-              La sagesse de Maelle
-              <br />
-              La voix d'Agathe
-              <br />
-              Le "menteur" de Quentin
-              <br />
-              La "présence" de Virgile
-            </div>
-            <div style={{ fontSize: "0.8rem", fontStyle: "italic", textAlign: "center", opacity: 0.75, marginTop: "1rem" }}>
-              Merci à Karl d'avoir prononcer cette phrase avec autant d'énergie
-            </div>
+            {creditsParagraphs.map((p, i) => (
+              <div key={i}>
+                <div
+                  style={{
+                    fontSize: p.italic ? "0.8rem" : "0.85rem",
+                    fontStyle: p.italic ? "italic" : "normal",
+                    textAlign: "center",
+                    lineHeight: 1.7,
+                    opacity: p.italic ? 0.75 : 0.85,
+                    marginTop: i === 0 ? 0 : "0.9rem",
+                  }}
+                >
+                  {p.heading && <div style={{ fontWeight: 700, marginBottom: "0.2rem" }}>{p.heading}</div>}
+                  {p.lines.map((line, li) => (
+                    <span key={li}>
+                      {line}
+                      {li < p.lines.length - 1 && <br />}
+                    </span>
+                  ))}
+                </div>
+                {i === 0 && creditsParagraphs.length > 1 && (
+                  <div style={{ height: 1, background: paperPalette.gold, opacity: 0.4, width: "60%", margin: "0.9rem auto 0" }} />
+                )}
+              </div>
+            ))}
+            {editMode && (
+              <div style={{ marginTop: "0.9rem", display: "flex", flexDirection: "column", gap: "0.35rem" }}>
+                <div style={{ fontSize: "0.7rem", opacity: 0.7, textAlign: "center" }}>
+                  Édition des crédits — ligne vide = nouveau paragraphe, "## Titre" = intitulé en gras, "*texte*" = paragraphe en italique
+                </div>
+                <textarea
+                  value={creditsText}
+                  onChange={(e) => setCreditsTextOverride(e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
+                  rows={16}
+                  style={{
+                    width: "100%",
+                    fontSize: "0.78rem",
+                    fontFamily: "inherit",
+                    border: `1px solid ${paperPalette.gold}`,
+                    borderRadius: 6,
+                    padding: "0.5rem",
+                    background: "#fff",
+                    color: paperPalette.ink,
+                    resize: "vertical",
+                  }}
+                />
+              </div>
+            )}
             <div
               style={{
                 fontFamily: "V05Pacifico, cursive",

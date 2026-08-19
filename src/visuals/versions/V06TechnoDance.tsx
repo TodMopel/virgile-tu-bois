@@ -31,6 +31,16 @@ const DANCERS = [
   { freqX: 1.0, freqY: 2.0, radiusX: 104, radiusY: 78, phase: 3.9, hue: 238, size: 19 },
   { freqX: 1.8, freqY: 1.0, radiusX: 90, radiusY: 98, phase: 4.6, hue: 245, size: 25 },
   { freqX: 0.5, freqY: 1.6, radiusX: 130, radiusY: 84, phase: 5.3, hue: 252, size: 22 },
+  // 7 de plus (retour du 2026-08-19 : "pouvoir en mettre plus") — au-delà des 17
+  // premiers, activables via "Nombre de danseurs" (?edit). Teinte continuée au-delà
+  // de 252 (même incrément ~7°, reste dans le bleu/violet plutôt que revenir au vert).
+  { freqX: 1.2, freqY: 1.8, radiusX: 112, radiusY: 66, phase: 0.15, hue: 259, size: 20 },
+  { freqX: 2.0, freqY: 0.65, radiusX: 80, radiusY: 120, phase: 0.85, hue: 266, size: 24 },
+  { freqX: 0.75, freqY: 2.3, radiusX: 128, radiusY: 58, phase: 1.55, hue: 273, size: 21 },
+  { freqX: 1.55, freqY: 1.05, radiusX: 98, radiusY: 94, phase: 2.25, hue: 280, size: 26 },
+  { freqX: 2.2, freqY: 1.4, radiusX: 70, radiusY: 106, phase: 2.95, hue: 287, size: 19 },
+  { freqX: 0.95, freqY: 1.75, radiusX: 116, radiusY: 76, phase: 3.65, hue: 294, size: 23 },
+  { freqX: 1.75, freqY: 0.85, radiusX: 86, radiusY: 110, phase: 4.35, hue: 301, size: 22 },
 ];
 
 const DUP_OFFSETS = [
@@ -205,13 +215,14 @@ function Dancer({ energyRef, freqX, freqY, radiusX, radiusY, phase, hue, size }:
   );
 }
 
-export function V06TechnoDance({ energyRef }: VisualProps) {
+export function V06TechnoDance({ energyRef, background, titleFontFamily, custom }: VisualProps) {
+  const dancerCount = Math.round(custom?.dancerCount ?? DANCERS.length);
   return (
-    <Stage background="linear-gradient(135deg, #001b33, #004a7a)" energyRef={energyRef} flashBand="bass" flashColor="79,217,255">
+    <Stage background={background ?? "linear-gradient(135deg, #001b33, #004a7a)"} energyRef={energyRef} flashBand="bass" flashColor="79,217,255">
       {FALLING_LINES.map((l, i) => (
         <FallingLine key={i} energyRef={energyRef} {...l} />
       ))}
-      {DANCERS.map((d, i) => (
+      {DANCERS.slice(0, dancerCount).map((d, i) => (
         <Dancer key={i} energyRef={energyRef} {...d} />
       ))}
       <TitleText
@@ -223,7 +234,7 @@ export function V06TechnoDance({ energyRef }: VisualProps) {
         letterBand="treble"
         letterAmplitude={4}
         style={{
-          fontFamily: "V06ShareTechMono, monospace",
+          fontFamily: titleFontFamily ?? "V06ShareTechMono, monospace",
           fontWeight: 700,
           color: "#eafcff",
           letterSpacing: "0.02em",

@@ -43,6 +43,18 @@ const BLOBS = [
   { size: 130, baseX: 54, baseY: 12, speed: 0.32, phase: 4.7, color: BLOB_COLORS.amber },
   { size: 90, baseX: 30, baseY: 88, speed: 0.38, phase: 2.9, color: BLOB_COLORS.gold },
   { size: 60, baseX: 92, baseY: 78, speed: 0.4, phase: 1.8, color: BLOB_COLORS.ember },
+  // 10 de plus (retour du 2026-08-19 : "j'aimerais pouvoir mettre plus de blobs") —
+  // au-delà des 10 premiers, activables via le réglage "Nombre de blobs" (?edit).
+  { size: 240, baseX: 6, baseY: 48, speed: 0.25, phase: 0.4, color: BLOB_COLORS.orange },
+  { size: 110, baseX: 40, baseY: 6, speed: 0.36, phase: 2.6, color: BLOB_COLORS.red },
+  { size: 180, baseX: 88, baseY: 14, speed: 0.27, phase: 4.9, color: BLOB_COLORS.amber },
+  { size: 75, baseX: 60, baseY: 92, speed: 0.39, phase: 1.1, color: BLOB_COLORS.gold },
+  { size: 210, baseX: 4, baseY: 84, speed: 0.23, phase: 3.7, color: BLOB_COLORS.ember },
+  { size: 95, baseX: 96, baseY: 60, speed: 0.35, phase: 5.3, color: BLOB_COLORS.orange },
+  { size: 160, baseX: 22, baseY: 4, speed: 0.29, phase: 0.9, color: BLOB_COLORS.red },
+  { size: 120, baseX: 76, baseY: 96, speed: 0.31, phase: 3.1, color: BLOB_COLORS.amber },
+  { size: 65, baseX: 44, baseY: 44, speed: 0.42, phase: 1.6, color: BLOB_COLORS.gold },
+  { size: 230, baseX: 98, baseY: 30, speed: 0.21, phase: 4.4, color: BLOB_COLORS.ember },
 ];
 
 function LavaBlob({
@@ -95,7 +107,7 @@ function LavaBlob({
   );
 }
 
-function LavaLamp({ energyRef }: Pick<VisualProps, "energyRef">) {
+function LavaLamp({ energyRef, count }: Pick<VisualProps, "energyRef"> & { count: number }) {
   // goo en CSS pur (blur + contraste), pas via un filtre SVG référencé — retour du
   // 2026-08-12 : "filter: url(#id)" ne fonctionne pas de façon fiable sur Safari/iOS
   // (bug WebKit connu, indépendant des transforms). blur()+contrast() est natif et
@@ -118,7 +130,7 @@ function LavaLamp({ energyRef }: Pick<VisualProps, "energyRef">) {
         filter: "blur(30px) contrast(5) saturate(.96)",
       }}
     >
-      {BLOBS.map((b, i) => (
+      {BLOBS.slice(0, count).map((b, i) => (
         <LavaBlob key={i} energyRef={energyRef} {...b} />
       ))}
     </div>
@@ -138,10 +150,11 @@ function Starburst({ energyRef }: Pick<VisualProps, "energyRef">) {
   );
 }
 
-export function V02DiscoPop({ energyRef }: VisualProps) {
+export function V02DiscoPop({ energyRef, background, titleFontFamily, custom }: VisualProps) {
+  const blobCount = Math.round(custom?.blobCount ?? BLOBS.length);
   return (
-    <Stage background={BACKGROUND} energyRef={energyRef} flashBand="overall" flashColor="255,210,61">
-      <LavaLamp energyRef={energyRef} />
+    <Stage background={background ?? BACKGROUND} energyRef={energyRef} flashBand="overall" flashColor="255,210,61">
+      <LavaLamp energyRef={energyRef} count={blobCount} />
       <Starburst energyRef={energyRef} />
       <TitleText
         energyRef={energyRef}
@@ -152,7 +165,7 @@ export function V02DiscoPop({ energyRef }: VisualProps) {
         letterBand="mid"
         letterAmplitude={7}
         style={{
-          fontFamily: "V02Baloo, sans-serif",
+          fontFamily: titleFontFamily ?? "V02Baloo, sans-serif",
           color: "#fff7ea",
           textShadow: "0 0.06em 0 #ff2f7a, 0 0.12em 0 #a855f7",
         }}

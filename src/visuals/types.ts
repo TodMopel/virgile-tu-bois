@@ -15,4 +15,10 @@ export const SILENT_FRAME: EnergyFrame = { bass: 0, mid: 0, treble: 0, overall: 
 export interface VisualProps {
   energyRef: RefObject<EnergyFrame>;
   playing: boolean;
+  /** Override de fond (panneau ?edit) — remplace le dégradé codé en dur si fourni. */
+  background?: string;
+  /** Override de police du titre (panneau ?edit) — remplace la police codée en dur si fournie. */
+  titleFontFamily?: string;
+  /** Réglage spécifique à cette version (voir config/trackFields.ts) — une seule clé utilisée par version. */
+  custom?: Record<string, number>;
 }

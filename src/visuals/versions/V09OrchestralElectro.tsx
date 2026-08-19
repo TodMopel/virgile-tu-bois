@@ -19,6 +19,12 @@ const BLOBS = [
   { top: "40%", size: 480, opacity: 0.25, speed: 0.6, blur: 58 },
   { top: "66%", size: 300, opacity: 0.28, speed: 1.1, blur: 34 },
   { top: "84%", size: 260, opacity: 0.22, speed: 0.75, blur: 40 },
+  // 4 de plus (retour du 2026-08-19 : "pouvoir en mettre plus") — au-delà des 4
+  // premières, activables via "Nappes de brume" (?edit).
+  { top: "4%", size: 340, opacity: 0.2, speed: 0.7, blur: 46 },
+  { top: "27%", size: 220, opacity: 0.24, speed: 0.95, blur: 30 },
+  { top: "53%", size: 400, opacity: 0.18, speed: 0.55, blur: 52 },
+  { top: "95%", size: 280, opacity: 0.26, speed: 1.0, blur: 36 },
 ];
 
 interface FogBlobProps extends Pick<VisualProps, "energyRef"> {
@@ -125,15 +131,16 @@ function MistParticle({
   );
 }
 
-export function V09OrchestralElectro({ energyRef }: VisualProps) {
+export function V09OrchestralElectro({ energyRef, background, titleFontFamily, custom }: VisualProps) {
+  const mistBlobCount = Math.round(custom?.mistBlobCount ?? BLOBS.length);
   return (
     <Stage
-      background="linear-gradient(135deg, #052014, #0a3d2a)"
+      background={background ?? "linear-gradient(135deg, #052014, #0a3d2a)"}
       energyRef={energyRef}
       flashBand="mid"
       flashColor="79,255,170"
     >
-      {BLOBS.map((blob, i) => (
+      {BLOBS.slice(0, mistBlobCount).map((blob, i) => (
         <FogBlob key={i} energyRef={energyRef} {...blob} />
       ))}
       {PARTICLES.map((p, i) => (
@@ -166,7 +173,7 @@ export function V09OrchestralElectro({ energyRef }: VisualProps) {
         letterBand="mid"
         letterAmplitude={3}
         style={{
-          fontFamily: "V09Marcellus, Georgia, serif",
+          fontFamily: titleFontFamily ?? "V09Marcellus, Georgia, serif",
           color: "#eaf7ee",
           textShadow: "0 0 10px rgba(79,255,170,0.4)",
         }}

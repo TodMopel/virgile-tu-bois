@@ -2,6 +2,7 @@ import { useState, type CSSProperties, type ReactNode } from "react";
 import { usePlaybackContext } from "../audio/PlaybackContext";
 import { formatTime } from "../audio/formatTime";
 import { useSfx } from "../audio/useSfx";
+import { useEffectiveTrackOverride } from "../config/store";
 import { PlayIcon, PauseIcon, NextIcon, PrevIcon, ShuffleIcon, RepeatIcon, RepeatOneIcon, VolumeIcon } from "../ui/icons";
 
 interface PlayerScreenProps {
@@ -34,6 +35,9 @@ export function PlayerScreen({ onBack }: PlayerScreenProps) {
     toggleRepeatMode,
   } = usePlaybackContext();
   const { play: playSfx } = useSfx();
+  // Hook appelé avant le early return ci-dessous (règle des hooks) — id vide si rien
+  // ne joue encore, la fusion retombe alors simplement sur {}.
+  const override = useEffectiveTrackOverride(currentTrack?.id ?? "");
 
   // Pendant un drag, on affiche la valeur locale plutôt que celle du contexte :
   // le contexte se remet à jour toutes les 200ms (voir PlaybackContext.tick) et,
@@ -78,7 +82,13 @@ export function PlayerScreen({ onBack }: PlayerScreenProps) {
 
   return (
     <div style={{ position: "absolute", inset: 0 }}>
-      <Visual energyRef={energyRef} playing={playing} />
+      <Visual
+        energyRef={energyRef}
+        playing={playing}
+        background={override.background}
+        titleFontFamily={override.titleFontFamily}
+        custom={override.custom}
+      />
 
       <button
         onClick={() => {
