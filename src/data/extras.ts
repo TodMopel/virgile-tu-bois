@@ -48,6 +48,8 @@ export const extras: ExtraItem[] = [
   { id: "extra-28", caption: "APÉRO !", image: "./extras/extra-28.jpg", fontFamily: "V04Audiowide, sans-serif" },
   { id: "extra-29", caption: "", image: "./extras/extra-29.jpg", objectPosition: "58% 42%", zoom: 2.05 },
   { id: "extra-30", caption: "Cover V1", image: "./extras/extra-30.jpg" },
+  { id: "extra-79", caption: "", image: "./extras/extra-79.jpg" },
+  { id: "extra-80", caption: "", image: "./extras/extra-80.jpg" },
   { id: "extra-31", caption: "ça pue la victoire", image: "./extras/extra-31.jpg", objectPosition: "50% 66%", fontFamily: "V08Quicksand, sans-serif" },
   { id: "extra-32", caption: "❤️", image: "./extras/extra-32.jpg", objectPosition: "100% 50%", zoom: 2.65 },
   { id: "extra-33", caption: "", image: "./extras/extra-33.jpg", objectPosition: "42% 50%", zoom: 1.75 },
