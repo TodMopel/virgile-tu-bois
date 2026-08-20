@@ -23,6 +23,7 @@ Manon
 Pio
 Eliot
 Tiphaine
+Nala
 
 ## Extra remerciments
 La bonhumeur de Rémy
